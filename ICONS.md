@@ -12,4 +12,4 @@ You can use the same icon design as the Linux version (blue TV with play button)
 
 Download from: https://webostv.developer.lge.com/develop/app-developer-guide/setup-webos-tv-sdk/
 
-Extract `webOSTVjs-v1.2.4.zip` to a folder named `webOSTVjs-1.2.4/` in this directory.
+Extract `webOSTVjs-v1.2.13.zip` to a folder named `webOSTVjs-1.2.13/` in this directory.

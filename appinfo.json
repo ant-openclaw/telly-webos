@@ -1,7 +1,7 @@
 {
-  "id": "com.yourdomain.telly",
+  "id": "com.talant.telly",
   "version": "1.0.0",
-  "vendor": "Your Name",
+  "vendor": "Talant",
   "type": "web",
   "main": "index.html",
   "title": "Telly",

@@ -9,7 +9,6 @@
   "largeIcon": "icon-large.png",
   "description": "Lightweight IPTV player for webOS",
   "splashBackground": "splash.png",
-  "bgImage": "bgImage.png",
   "disableBackHistoryAPI": true,
   "supportsAudioGuidance": true
 }

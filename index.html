@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telly</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="webOSTVjs-1.2.4/webOSTV.js"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- Settings Screen -->
+        <div id="settings-screen" class="screen active">
+            <div class="header">
+                <h1>Telly</h1>
+                <p>Enter your M3U playlist URL</p>
+            </div>
+            <div class="input-container">
+                <input type="text" id="m3u-url" placeholder="https://example.com/playlist.m3u" />
+                <button id="save-btn" class="focusable">Save & Load</button>
+            </div>
+            <div id="settings-error" class="error-message"></div>
+        </div>
+
+        <!-- Channel Grid Screen -->
+        <div id="channels-screen" class="screen">
+            <div class="header">
+                <h1>Channels</h1>
+                <div class="header-actions">
+                    <input type="text" id="search-box" placeholder="Search channels..." class="focusable" />
+                    <button id="settings-btn" class="focusable">Settings</button>
+                </div>
+            </div>
+            <div id="channel-grid" class="channel-grid">
+                <!-- Channels populated by JS -->
+            </div>
+            <div id="loading" class="loading hidden">Loading...</div>
+            <div id="error" class="error-message hidden"></div>
+        </div>
+
+        <!-- Video Player Screen -->
+        <div id="player-screen" class="screen">
+            <video id="video-player" autoplay playsinline></video>
+            <div id="player-info" class="player-info">
+                <div id="player-channel-name"></div>
+                <div class="player-hint">Press BACK to return to channels</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

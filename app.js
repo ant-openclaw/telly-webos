@@ -32,6 +32,8 @@
 
     // Initialize
     function init() {
+        console.log('Telly: Initializing...');
+        
         // Load saved URL
         const savedUrl = localStorage.getItem('telly_m3u_url');
         if (savedUrl) {
@@ -44,12 +46,25 @@
         settingsBtn.addEventListener('click', showSettings);
         searchBox.addEventListener('input', onSearchInput);
 
+        // Focus input when clicked (for TV virtual keyboard)
+        m3uUrlInput.addEventListener('click', function() {
+            this.focus();
+            // Try to open webOS VKB if available
+            if (window.webOS && window.webOS.keyboard) {
+                window.webOS.keyboard.show();
+            }
+        });
+
         // Keyboard/Remote navigation
         document.addEventListener('keydown', onKeyDown);
 
-        // Initialize focus
-        updateFocusableElements();
-        updateFocus();
+        // Initialize focus after a short delay to ensure DOM is ready
+        setTimeout(function() {
+            updateFocusableElements();
+            currentFocusIndex = 0;
+            updateFocus();
+            console.log('Telly: Focus initialized on', focusableElements.length, 'elements');
+        }, 100);
     }
 
     // Screen management
@@ -58,6 +73,7 @@
         screens[screenName].classList.add('active');
         currentScreen = screenName;
         updateFocusableElements();
+        currentFocusIndex = 0;
         updateFocus();
     }
 
@@ -211,11 +227,12 @@
 
     // TV Remote Navigation
     function onKeyDown(e) {
-        const key = e.key;
+        const key = e.key || e.keyCode;
+        console.log('Key pressed:', key);
         
         // Player screen - BACK returns to channels
         if (currentScreen === 'player') {
-            if (key === 'Back' || key === 'Escape' || key === 'Backspace') {
+            if (key === 'Back' || key === 'Escape' || key === 'Backspace' || key === 27 || key === 8) {
                 e.preventDefault();
                 videoPlayer.pause();
                 videoPlayer.src = '';
@@ -231,6 +248,7 @@
             
             switch(key) {
                 case 'ArrowRight':
+                case 39:
                     e.preventDefault();
                     if (currentFocusIndex < focusableElements.length - 1) {
                         currentFocusIndex++;
@@ -238,6 +256,7 @@
                     }
                     break;
                 case 'ArrowLeft':
+                case 37:
                     e.preventDefault();
                     if (currentFocusIndex > 0) {
                         currentFocusIndex--;
@@ -245,6 +264,7 @@
                     }
                     break;
                 case 'ArrowDown':
+                case 40:
                     e.preventDefault();
                     if (currentFocusIndex + cols < focusableElements.length) {
                         currentFocusIndex += cols;
@@ -252,24 +272,28 @@
                     }
                     break;
                 case 'ArrowUp':
+                case 38:
                     e.preventDefault();
                     if (currentFocusIndex - cols >= 0) {
                         currentFocusIndex -= cols;
                     } else if (currentFocusIndex > 0) {
-                        // Jump to search box if at top
                         currentFocusIndex = 0;
                     }
                     updateFocus();
                     break;
                 case 'Enter':
+                case 13:
                     e.preventDefault();
-                    focusableElements[currentFocusIndex].click();
+                    if (focusableElements[currentFocusIndex]) {
+                        focusableElements[currentFocusIndex].focus();
+                        focusableElements[currentFocusIndex].click();
+                    }
                     break;
                 case 'Back':
                 case 'Escape':
-                    if (currentScreen === 'channels') {
-                        // Do nothing or go to settings
-                    }
+                case 27:
+                    e.preventDefault();
+                    showSettings();
                     break;
             }
         } else if (currentScreen === 'settings') {
@@ -277,19 +301,28 @@
             switch(key) {
                 case 'ArrowDown':
                 case 'ArrowRight':
+                case 40:
+                case 39:
                     e.preventDefault();
                     currentFocusIndex = (currentFocusIndex + 1) % focusableElements.length;
                     updateFocus();
                     break;
                 case 'ArrowUp':
                 case 'ArrowLeft':
+                case 38:
+                case 37:
                     e.preventDefault();
                     currentFocusIndex = (currentFocusIndex - 1 + focusableElements.length) % focusableElements.length;
                     updateFocus();
                     break;
                 case 'Enter':
+                case 13:
                     e.preventDefault();
-                    focusableElements[currentFocusIndex].click();
+                    if (focusableElements[currentFocusIndex]) {
+                        const el = focusableElements[currentFocusIndex];
+                        el.focus();
+                        el.click();
+                    }
                     break;
             }
         }
@@ -306,7 +339,10 @@
 
     function updateFocusableElements() {
         const activeScreen = screens[currentScreen];
-        focusableElements = Array.from(activeScreen.querySelectorAll('.focusable'));
+        if (activeScreen) {
+            focusableElements = Array.from(activeScreen.querySelectorAll('.focusable'));
+            console.log('Updated focusable elements:', focusableElements.length);
+        }
     }
 
     function updateFocus() {
@@ -315,10 +351,11 @@
         });
         
         if (focusableElements[currentFocusIndex]) {
+            focusableElements[currentFocusIndex].focus();
             focusableElements[currentFocusIndex].scrollIntoView({ block: 'nearest' });
         }
     }
 
     // Start
-    init();
+    document.addEventListener('DOMContentLoaded', init);
 })();

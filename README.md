@@ -27,9 +27,32 @@ telly-webos/
 
 ## Setup
 
-### 1. Download webOS TV Library
+### 1. Download webOS TV Library (Optional but Recommended)
 
-Download `webOSTVjs-v1.2.4.zip` from the [LG webOS TV Developer site](https://webostv.developer.lge.com/develop/app-developer-guide/setup-webos-tv-sdk/) and extract to `webOSTVjs-1.2.4/`.
+The app works without this, but including it provides better TV integration.
+
+**Download:** `webOSTVjs-v1.2.4.zip` from the [LG webOS TV Developer site](https://webostv.developer.lge.com/develop/app-developer-guide/setup-webos-tv-sdk/)
+
+**Extract to:** `telly-webos/webOSTVjs-1.2.4/`
+
+```
+telly-webos/
+├── appinfo.json
+├── index.html
+├── app.js
+├── styles.css
+└── webOSTVjs-1.2.4/          <-- CREATE THIS FOLDER
+    ├── webOSTV.js
+    └── webOSTV-dev.js
+```
+
+**What it does:**
+- Handles TV remote back button properly
+- Provides app lifecycle events (pause/resume)
+- Access to TV system info (model, OS version)
+- Better integration with webOS features
+
+**Without it:** The app still works, but uses standard HTML5 APIs only.
 
 ### 2. Create Icons
 
